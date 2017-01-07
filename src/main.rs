@@ -1,12 +1,13 @@
+//! Bleh.
+
 extern crate toml;
 extern crate serde;
 #[macro_use] extern crate serde_derive;
 
-mod config;
-use config::Config;
+pub mod config;
 
 fn main() {
-    let a = Config::load(r#"
+    let a = config::Config::load(r#"
         [redis]
         uri = "bleh"
     "#).unwrap();

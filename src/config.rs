@@ -3,16 +3,19 @@ use toml;
 use serde;
 use serde::{Deserialize, Serialize};
 
+/// Holds the web server config
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ServerConfig {
     pub port: u16
 }
 
+/// Holds the Redis connection config
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RedisConfig {
     pub uri: String
 }
 
+/// Holds the LDAP connection config
 #[derive(Debug, Serialize, Deserialize)]
 pub struct LdapConfig {
     pub uri: String,
@@ -21,14 +24,15 @@ pub struct LdapConfig {
     pub base_dn: String,
 }
 
+/// A structure that holds the application config
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Config {
     #[serde(default)]
-    server: ServerConfig,
+    pub server: ServerConfig,
     #[serde(default)]
-    redis: RedisConfig,
+    pub redis: RedisConfig,
     #[serde(default)]
-    ldap: LdapConfig,
+    pub ldap: LdapConfig,
 }
 
 impl Default for ServerConfig {
@@ -103,6 +107,25 @@ impl error::Error for LoadError {
 }
 
 impl Config {
+    /// Loads a config from a string (toml)
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// Config::load(r#"
+    ///     [server]
+    ///     port = 1234
+    ///
+    ///     [redis]
+    ///     uri = "redis://127.0.0.1/"
+    ///
+    ///     [ldap]
+    ///     uri = "ldap://127.0.0.1:389
+    ///     user = "admin"
+    ///     pass = "password"
+    ///     base_dn = "DC=example,DC=com"
+    /// "#);
+    /// ```
     pub fn load(config: &str) -> Result<Self, LoadError> {
         let mut parser = toml::Parser::new(config);
         let value = match parser.parse() {
@@ -113,6 +136,26 @@ impl Config {
         Deserialize::deserialize(&mut decoder).map_err(|e| LoadError::DecodeError(e))
     }
 
+    /// Save the config to string (toml)
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// Config::default().save().unwrap();
+    /// /*
+    /// [ldap]
+    /// base_dn = ""
+    /// pass = ""
+    /// uri = "ldap://127.0.0.1:389"
+    /// user = ""
+    ///
+    /// [redis]
+    /// uri = "redis://127.0.0.1/"
+    ///
+    /// [server]
+    /// port = 8080
+    /// */
+    /// ```
     pub fn save(self) -> Result<String, <toml::Encoder as serde::Serializer>::Error> {
         let mut e = toml::Encoder::new();
         try!(self.serialize(&mut e));
