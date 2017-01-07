@@ -1,22 +1,23 @@
 use std::{fmt, error};
+use clap;
 use toml;
 use serde;
 use serde::{Deserialize, Serialize};
 
 /// Holds the web server config
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ServerConfig {
     pub port: u16
 }
 
 /// Holds the Redis connection config
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RedisConfig {
     pub uri: String
 }
 
 /// Holds the LDAP connection config
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LdapConfig {
     pub uri: String,
     pub user: String,
@@ -25,7 +26,7 @@ pub struct LdapConfig {
 }
 
 /// A structure that holds the application config
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Config {
     #[serde(default)]
     pub server: ServerConfig,
@@ -106,6 +107,25 @@ impl error::Error for LoadError {
     }
 }
 
+macro_rules! merge_with_arg {
+    // Special case for `String`, to avoid `unreachable_patterns`
+    ($c:ident.$p1:ident.$p2:ident, String, $m:ident) => {
+        if let Some(v) = $m.value_of(concat!(stringify!($p1), '.', stringify!($p2))) {
+            $c.$p1.$p2 = String::from(v);
+        }
+    };
+    ($c:ident.$p1:ident.$p2:ident, $t:ty, $m:ident) => {
+        if let Some(v) = $m.value_of(concat!(stringify!($p1), '.', stringify!($p2))) {
+            match v.parse::<$t>() {
+                Ok(val) => $c.$p1.$p2 = val,
+                Err(_)  =>
+                    ::clap::Error::value_validation_auto(
+                        format!("The argument '{}' isn't a valid value", v)).exit(),
+            }
+        }
+    };
+}
+
 impl Config {
     /// Loads a config from a string (toml)
     ///
@@ -160,5 +180,17 @@ impl Config {
         let mut e = toml::Encoder::new();
         try!(self.serialize(&mut e));
         Ok(toml::Value::Table(e.toml).to_string())
+    }
+
+    /// Merge a config with a `clap::ArgMatches`
+    pub fn merge_with_args(self, args: clap::ArgMatches) -> Self {
+        let mut config = self.clone();
+        merge_with_arg!(config.server.port, u16, args);
+        merge_with_arg!(config.redis.uri, String, args);
+        merge_with_arg!(config.ldap.uri, String, args);
+        merge_with_arg!(config.ldap.base_dn, String, args);
+        merge_with_arg!(config.ldap.user, String, args);
+        merge_with_arg!(config.ldap.pass, String, args);
+        config
     }
 }
