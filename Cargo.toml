@@ -1,0 +1,13 @@
+[package]
+name = "auth-service"
+version = "0.1.0"
+authors = ["Quentin Gliech <quentingliech@gmail.com>"]
+
+[dependencies]
+serde = "0.8"
+serde_derive = "0.8"
+
+[dependencies.toml]
+version = "0.2"
+default-features = false
+features = ["serde"]
