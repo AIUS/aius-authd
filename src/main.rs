@@ -10,6 +10,8 @@ extern crate toml;
 use clap::{App, Arg};
 use std::fs::File;
 use std::io::Read;
+use std::collections::HashMap;
+use std::env;
 
 pub mod config;
 pub mod server;
@@ -63,8 +65,14 @@ fn main() {
              .help("Base DN to bind when connecting to the LDAP server"))
         .get_matches();
 
+    let env = env::vars()
+        .map(|(k, v)| (k.to_uppercase(), v))
+        .filter(|&(ref k, _)| k.starts_with("AUTH_"))
+        .collect::<HashMap<String, String>>();
+
     // @TODO: Error handling when loading the config file
-    let config = match args.value_of("config") {
+    let config = match args.value_of("config")
+        .or(env.get("AUTH_CONFIG").map(|s| s.as_str())) {
         Some(p) => {
             let mut f = File::open(p).unwrap();
             let mut toml = String::new();
@@ -72,7 +80,9 @@ fn main() {
             config::Config::load(toml.as_str()).unwrap()
         },
         None => config::Config::default()
-    }.merge_with_args(args);
+    }
+    .merge_with_args(args)
+    .merge_with_env(env);
 
     // @TODO: Pretty startup info
     println!("{:?}", config);

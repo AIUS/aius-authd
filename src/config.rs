@@ -1,4 +1,5 @@
 use std::{fmt, error};
+use std::collections::HashMap;
 use clap;
 use redis;
 use serde;
@@ -150,6 +151,21 @@ macro_rules! merge_with_arg {
     };
 }
 
+macro_rules! merge_with_env {
+    ($c:ident.$p1:ident.$p2:ident, String, $m:ident) => {
+        if let Some(v) = $m.get(concat!("AUTH_", stringify!($p1), "_", stringify!($p2)).to_uppercase().as_str()) {
+            $c.$p1.$p2 = v.clone();
+        }
+    };
+    ($c:ident.$p1:ident.$p2:ident, $t:ty, $m:ident) => {
+        if let Some(v) = $m.get(concat!("AUTH_", stringify!($p1), "_", stringify!($p2)).to_uppercase().as_str()) {
+            if let Ok(val) = v.parse::<$t>() {
+                $c.$p1.$p2 = val;
+            }
+        }
+    };
+}
+
 impl Config {
     /// Loads a config from a string (toml)
     ///
@@ -209,6 +225,7 @@ impl Config {
     }
 
     /// Merge a config with a `clap::ArgMatches`
+    /// @TODO: Proper error handling
     pub fn merge_with_args(self, args: clap::ArgMatches) -> Self {
         let mut config = self.clone();
         merge_with_arg!(config.server.address, String, args);
@@ -218,6 +235,20 @@ impl Config {
         merge_with_arg!(config.ldap.base_dn, String, args);
         merge_with_arg!(config.ldap.user, String, args);
         merge_with_arg!(config.ldap.pass, String, args);
+        config
+    }
+
+    /// Merge a config with environment variables
+    /// @TODO: Proper error handling
+    pub fn merge_with_env(self, env: HashMap<String, String>) -> Self {
+        let mut config = self.clone();
+        merge_with_env!(config.server.address, String, env);
+        merge_with_env!(config.server.port, u16, env);
+        merge_with_env!(config.redis.uri, String, env);
+        merge_with_env!(config.ldap.uri, String, env);
+        merge_with_env!(config.ldap.base_dn, String, env);
+        merge_with_env!(config.ldap.user, String, env);
+        merge_with_env!(config.ldap.pass, String, env);
         config
     }
 }
