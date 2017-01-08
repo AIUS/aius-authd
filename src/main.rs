@@ -1,5 +1,6 @@
 #[macro_use] extern crate clap;
-extern crate iron;
+#[macro_use] extern crate iron;
+extern crate openldap;
 extern crate redis;
 extern crate router;
 extern crate serde;
@@ -15,6 +16,7 @@ use std::env;
 
 pub mod config;
 pub mod server;
+pub mod ldap;
 
 fn main() {
     let args = App::new(crate_name!())

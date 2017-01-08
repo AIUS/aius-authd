@@ -42,6 +42,13 @@ pub struct LdapConfig {
     pub base_dn: String,
 }
 
+/// A group definition structure
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct GroupConfig {
+    pub name: String,
+    pub scopes: Vec<String>,
+}
+
 /// A structure that holds the application config
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Config {
@@ -51,6 +58,8 @@ pub struct Config {
     pub redis: RedisConfig,
     #[serde(default)]
     pub ldap: LdapConfig,
+    #[serde(default)]
+    pub groups: Vec<GroupConfig>,
 }
 
 fn default_server_address() -> String { String::from("localhost") }
@@ -90,6 +99,7 @@ impl Default for Config {
             server: ServerConfig::default(),
             redis: RedisConfig::default(),
             ldap: LdapConfig::default(),
+            groups: Vec::default(),
         }
     }
 }

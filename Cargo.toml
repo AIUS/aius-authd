@@ -6,6 +6,7 @@ authors = ["Quentin Gliech <quentingliech@gmail.com>"]
 [dependencies]
 clap = "~2.20.0"
 iron = "0.4.*"
+openldap = "1.1.*"
 redis = "0.8.*"
 router = "0.4.*"
 serde = "0.8"

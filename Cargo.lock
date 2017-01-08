@@ -4,6 +4,7 @@ version = "0.1.0"
 dependencies = [
  "clap 2.20.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "iron 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "openldap 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "redis 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "router 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 0.8.21 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -196,6 +197,14 @@ dependencies = [
 [[package]]
 name = "num_cpus"
 version = "1.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "libc 0.2.18 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "openldap"
+version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "libc 0.2.18 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -465,6 +474,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum num-traits 0.1.36 (registry+https://github.com/rust-lang/crates.io-index)" = "a16a42856a256b39c6d3484f097f6713e14feacd9bfb02290917904fae46c81c"
 "checksum num_cpus 0.2.13 (registry+https://github.com/rust-lang/crates.io-index)" = "cee7e88156f3f9e19bdd598f8d6c9db7bf4078f99f8381f43a55b09648d1a6e3"
 "checksum num_cpus 1.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "a225d1e2717567599c24f88e49f00856c6e825a12125181ee42c4257e3688d39"
+"checksum openldap 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "199693e815469a23977c48909ae2eeccd49a0cfb6a5ab3b133602265cbaad587"
 "checksum plugin 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)" = "1a6a0dc3910bc8db877ffed8e457763b317cf880df4ae19109b9f77d277cf6e0"
 "checksum quote 0.3.10 (registry+https://github.com/rust-lang/crates.io-index)" = "6732e32663c9c271bfc7c1823486b471f18c47a2dbf87c066897b7b51afc83be"
 "checksum redis 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)" = "02a92e223490cc63d9230c4cdf132a48ce154ab1e063558e3841e219c2ea3f91"
