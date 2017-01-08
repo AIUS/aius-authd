@@ -1,10 +1,11 @@
 #[macro_use] extern crate clap;
-extern crate toml;
 extern crate iron;
+extern crate redis;
 extern crate router;
 extern crate serde;
-extern crate serde_json;
 #[macro_use] extern crate serde_derive;
+extern crate serde_json;
+extern crate toml;
 
 use clap::{App, Arg};
 use std::fs::File;

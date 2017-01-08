@@ -4,6 +4,7 @@ version = "0.1.0"
 dependencies = [
  "clap 2.20.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "iron 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "redis 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "router 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 0.8.21 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_derive 0.8.21 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -214,6 +215,15 @@ version = "0.3.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
+name = "redis"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "sha1 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "url 1.2.4 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "route-recognizer"
 version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -287,6 +297,11 @@ dependencies = [
  "num-traits 0.1.36 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 0.8.21 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
+
+[[package]]
+name = "sha1"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "solicit"
@@ -452,6 +467,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum num_cpus 1.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "a225d1e2717567599c24f88e49f00856c6e825a12125181ee42c4257e3688d39"
 "checksum plugin 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)" = "1a6a0dc3910bc8db877ffed8e457763b317cf880df4ae19109b9f77d277cf6e0"
 "checksum quote 0.3.10 (registry+https://github.com/rust-lang/crates.io-index)" = "6732e32663c9c271bfc7c1823486b471f18c47a2dbf87c066897b7b51afc83be"
+"checksum redis 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)" = "02a92e223490cc63d9230c4cdf132a48ce154ab1e063558e3841e219c2ea3f91"
 "checksum route-recognizer 0.1.11 (registry+https://github.com/rust-lang/crates.io-index)" = "4f0a750d020adb1978f5964ea7bca830585899b09da7cbb3f04961fc2400122d"
 "checksum router 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "b94397bfa5b772b4375be4da12560a7c1c1e74b2e35c46ed312958aad56df726"
 "checksum rustc-serialize 0.3.22 (registry+https://github.com/rust-lang/crates.io-index)" = "237546c689f20bb44980270c73c3b9edd0891c1be49cc1274406134a66d3957b"
@@ -462,6 +478,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum serde_codegen_internals 0.11.3 (registry+https://github.com/rust-lang/crates.io-index)" = "afad7924a009f859f380e4a2e3a509a845c2ac66435fcead74a4d983b21ae806"
 "checksum serde_derive 0.8.21 (registry+https://github.com/rust-lang/crates.io-index)" = "6e7ad1e74679b92730ca39c361ea125e2846df337c5d94d084eb2f7837c1843d"
 "checksum serde_json 0.8.4 (registry+https://github.com/rust-lang/crates.io-index)" = "3f7d3c184d35801fb8b32b46a7d58d57dbcc150b0eb2b46a1eb79645e8ecfd5b"
+"checksum sha1 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "cc30b1e1e8c40c121ca33b86c23308a090d19974ef001b4bf6e61fd1a0fb095c"
 "checksum solicit 0.4.4 (registry+https://github.com/rust-lang/crates.io-index)" = "172382bac9424588d7840732b250faeeef88942e37b6e35317dce98cafdd75b2"
 "checksum strsim 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)" = "b4d15c810519a91cf877e7e36e63fe068815c678181439f2f29e2562147c3694"
 "checksum syn 0.10.5 (registry+https://github.com/rust-lang/crates.io-index)" = "1a437f8b4353179418870f014113876cd4cd4f642e42dbc5ed4f328d5f808246"

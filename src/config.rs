@@ -1,5 +1,6 @@
 use std::{fmt, error};
 use clap;
+use redis;
 use serde;
 use serde::{Deserialize, Serialize};
 use toml;
@@ -18,6 +19,13 @@ pub struct ServerConfig {
 pub struct RedisConfig {
     #[serde(default = "default_redis_uri")]
     pub uri: String
+}
+
+impl RedisConfig {
+    pub fn connect(&self) -> redis::RedisResult<redis::Connection> {
+        let client = try!(redis::Client::open(self.uri.as_str()));
+        client.get_connection()
+    }
 }
 
 /// Holds the LDAP connection config
