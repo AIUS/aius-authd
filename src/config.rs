@@ -7,22 +7,29 @@ use toml;
 /// Holds the web server config
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ServerConfig {
+    #[serde(default = "default_server_address")]
     pub address: String,
+    #[serde(default = "default_server_port")]
     pub port: u16
 }
 
 /// Holds the Redis connection config
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RedisConfig {
+    #[serde(default = "default_redis_uri")]
     pub uri: String
 }
 
 /// Holds the LDAP connection config
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LdapConfig {
+    #[serde(default = "default_ldap_uri")]
     pub uri: String,
+    #[serde(default = "default_ldap_user")]
     pub user: String,
+    #[serde(default = "default_ldap_pass")]
     pub pass: String,
+    #[serde(default = "default_ldap_base_dn")]
     pub base_dn: String,
 }
 
@@ -37,25 +44,33 @@ pub struct Config {
     pub ldap: LdapConfig,
 }
 
+fn default_server_address() -> String { String::from("localhost") }
+fn default_server_port() -> u16 { 8080 }
+fn default_redis_uri() -> String { String::from("redis://127.0.0.1/") }
+fn default_ldap_uri() -> String { String::from("ldap://127.0.0.1:389") }
+fn default_ldap_user() -> String { String::new() }
+fn default_ldap_pass() -> String { String::new() }
+fn default_ldap_base_dn() -> String { String::new() }
+
 impl Default for ServerConfig {
     fn default() -> Self {
-        ServerConfig { address: String::from("localhost"), port: 8080 }
+        ServerConfig { address: default_server_address(), port: default_server_port() }
     }
 }
 
 impl Default for RedisConfig {
     fn default() -> Self {
-        RedisConfig { uri: String::from("redis://127.0.0.1/") }
+        RedisConfig { uri: default_redis_uri() }
     }
 }
 
 impl Default for LdapConfig {
     fn default() -> Self {
         LdapConfig {
-            uri: String::from("ldap://127.0.0.1:389"),
-            user: String::new(),
-            pass: String::new(),
-            base_dn: String::new(),
+            uri: default_ldap_uri(),
+            user: default_ldap_user(),
+            pass: default_ldap_pass(),
+            base_dn: default_ldap_base_dn(),
         }
     }
 }
