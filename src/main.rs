@@ -1,14 +1,17 @@
 #[macro_use] extern crate clap;
 #[macro_use] extern crate iron;
+extern crate logger;
 extern crate openldap;
 extern crate redis;
 extern crate router;
 extern crate serde;
 #[macro_use] extern crate serde_derive;
 extern crate serde_json;
+extern crate simplelog;
 extern crate toml;
 
 use clap::{App, Arg};
+use simplelog::{TermLogger, LogLevelFilter, Config};
 use std::fs::File;
 use std::io::Read;
 use std::collections::HashMap;
@@ -19,6 +22,8 @@ pub mod server;
 pub mod ldap;
 
 fn main() {
+    let _ = TermLogger::init(LogLevelFilter::Info, Config::default());
+
     let args = App::new(crate_name!())
         .version(crate_version!())
         .author(crate_authors!())
