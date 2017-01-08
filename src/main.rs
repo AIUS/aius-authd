@@ -1,6 +1,8 @@
 #[macro_use] extern crate clap;
 extern crate toml;
+extern crate iron;
 extern crate serde;
+extern crate serde_json;
 #[macro_use] extern crate serde_derive;
 
 use clap::{App, Arg};
@@ -8,15 +10,24 @@ use std::fs::File;
 use std::io::Read;
 
 pub mod config;
+pub mod server;
 
 fn main() {
-    let args = App::new("auth-service")
+    let args = App::new(crate_name!())
+        .version(crate_version!())
+        .author(crate_authors!())
         .arg(Arg::with_name("config")
              .long("config")
              .short("c")
              .takes_value(true)
              .value_name("FILE")
              .help("Path to the config file"))
+        .arg(Arg::with_name("server.address")
+             .long("server-address")
+             .short("a")
+             .takes_value(true)
+             .value_name("ADDRESS")
+             .help("Address used for the web server"))
         .arg(Arg::with_name("server.port")
              .long("server-port")
              .short("p")
@@ -51,7 +62,7 @@ fn main() {
         .get_matches();
 
     // @TODO: Error handling when loading the config file
-    let a = match args.value_of("config") {
+    let config = match args.value_of("config") {
         Some(p) => {
             let mut f = File::open(p).unwrap();
             let mut toml = String::new();
@@ -61,6 +72,9 @@ fn main() {
         None => config::Config::default()
     }.merge_with_args(args);
 
-    println!("{:?}", a);
-    println!("toml:\n{}", a.save().unwrap());
+    // @TODO: Pretty startup info
+    println!("{:?}", config);
+
+    // @TODO: Error handling when starting server
+    let _ = server::start(config.clone()).unwrap();
 }

@@ -1,12 +1,13 @@
 use std::{fmt, error};
 use clap;
-use toml;
 use serde;
 use serde::{Deserialize, Serialize};
+use toml;
 
 /// Holds the web server config
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ServerConfig {
+    pub address: String,
     pub port: u16
 }
 
@@ -38,7 +39,7 @@ pub struct Config {
 
 impl Default for ServerConfig {
     fn default() -> Self {
-        ServerConfig { port: 8080 }
+        ServerConfig { address: String::from("localhost"), port: 8080 }
     }
 }
 
@@ -134,6 +135,7 @@ impl Config {
     /// ```rust
     /// Config::load(r#"
     ///     [server]
+    ///     address = "0.0.0.0"
     ///     port = 1234
     ///
     ///     [redis]
@@ -173,6 +175,7 @@ impl Config {
     /// uri = "redis://127.0.0.1/"
     ///
     /// [server]
+    /// address = "localhost"
     /// port = 8080
     /// */
     /// ```
@@ -185,6 +188,7 @@ impl Config {
     /// Merge a config with a `clap::ArgMatches`
     pub fn merge_with_args(self, args: clap::ArgMatches) -> Self {
         let mut config = self.clone();
+        merge_with_arg!(config.server.address, String, args);
         merge_with_arg!(config.server.port, u16, args);
         merge_with_arg!(config.redis.uri, String, args);
         merge_with_arg!(config.ldap.uri, String, args);
