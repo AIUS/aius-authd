@@ -1,6 +1,7 @@
 #[macro_use] extern crate clap;
 extern crate toml;
 extern crate iron;
+extern crate router;
 extern crate serde;
 extern crate serde_json;
 #[macro_use] extern crate serde_derive;
@@ -76,5 +77,5 @@ fn main() {
     println!("{:?}", config);
 
     // @TODO: Error handling when starting server
-    let _ = server::start(config.clone()).unwrap();
+    let _ = server::start(config.clone(), server::get_handler()).unwrap();
 }
