@@ -1,3 +1,4 @@
+extern crate bodyparser;
 #[macro_use] extern crate clap;
 #[macro_use] extern crate iron;
 extern crate logger;
@@ -10,7 +11,7 @@ extern crate serde_json;
 extern crate simplelog;
 extern crate toml;
 
-use clap::{App, Arg};
+use clap::Arg;
 use simplelog::{TermLogger, LogLevelFilter, Config};
 use std::fs::File;
 use std::io::Read;
@@ -24,9 +25,7 @@ pub mod ldap;
 fn main() {
     let _ = TermLogger::init(LogLevelFilter::Info, Config::default());
 
-    let args = App::new(crate_name!())
-        .version(crate_version!())
-        .author(crate_authors!())
+    let args = app_from_crate!()
         .arg(Arg::with_name("config")
              .long("config")
              .short("c")
@@ -70,6 +69,11 @@ fn main() {
              .takes_value(true)
              .value_name("BASE_DN")
              .help("Base DN to bind when connecting to the LDAP server"))
+        .arg(Arg::with_name("ldap.user_pattern")
+             .long("ldap-user-pattern")
+             .takes_value(true)
+             .value_name("PATTERN")
+             .help("Pattern used to search users. Ex: `CN=%USER%,OU=people,DC=example,DC=org`"))
         .get_matches();
 
     let env = env::vars()

@@ -1,10 +1,11 @@
+use bodyparser;
 use serde_json;
 use redis;
 use iron::prelude::*;
 use iron::status;
 use router::Router;
 use server::middlewares::CurrentConfig;
-use ldap::LdapConn;
+use ldap;
 
 fn config_handler(req: &mut Request) -> IronResult<Response> {
     // Print the config as a test
@@ -19,15 +20,23 @@ fn ping_handler(req: &mut Request) -> IronResult<Response> {
     Ok(Response::with((status::Ok, ret)))
 }
 
-fn ldap_handler(req: &mut Request) -> IronResult<Response> {
-    let _ = itry!(LdapConn::from_config(req.extensions.get::<CurrentConfig>().unwrap().ldap.clone()));
-    Ok(Response::with((status::Ok, "Connection success")))
+#[derive(Deserialize, Clone, Debug)]
+struct LoginRequest {
+    username: String,
+    password: String,
+}
+
+fn login_handler(req: &mut Request) -> IronResult<Response> {
+    let login = iexpect!(itry!(req.get::<bodyparser::Struct<LoginRequest>>()));
+    itry!(ldap::login(login.username.as_str(), login.password.as_str(),
+                      req.extensions.get::<CurrentConfig>().unwrap().clone().ldap));
+    Ok(Response::with((status::Ok, "Login OK")))
 }
 
 pub fn get_handler() -> Router {
     let mut router = Router::new();
     router.get("/config", config_handler, "config");
     router.get("/ping", ping_handler, "ping");
-    router.get("/ldap", ldap_handler, "ldap");
+    router.post("/login", login_handler, "login");
     router
 }

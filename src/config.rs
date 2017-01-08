@@ -40,6 +40,8 @@ pub struct LdapConfig {
     pub pass: String,
     #[serde(default = "default_ldap_base_dn")]
     pub base_dn: String,
+    #[serde(default = "default_ldap_user_pattern")]
+    pub user_pattern: String,
 }
 
 /// A group definition structure
@@ -69,6 +71,7 @@ fn default_ldap_uri() -> String { String::from("ldap://127.0.0.1:389") }
 fn default_ldap_user() -> String { String::new() }
 fn default_ldap_pass() -> String { String::new() }
 fn default_ldap_base_dn() -> String { String::new() }
+fn default_ldap_user_pattern() -> String { String::from("%USER%") }
 
 impl Default for ServerConfig {
     fn default() -> Self {
@@ -89,6 +92,7 @@ impl Default for LdapConfig {
             user: default_ldap_user(),
             pass: default_ldap_pass(),
             base_dn: default_ldap_base_dn(),
+            user_pattern: default_ldap_user_pattern(),
         }
     }
 }
@@ -195,6 +199,7 @@ impl Config {
     ///     user = "admin"
     ///     pass = "password"
     ///     base_dn = "DC=example,DC=com"
+    ///     user_pattern = "cn=%USER%"
     /// "#);
     /// ```
     pub fn load(config: &str) -> Result<Self, LoadError> {
@@ -219,6 +224,7 @@ impl Config {
     /// pass = ""
     /// uri = "ldap://127.0.0.1:389"
     /// user = ""
+    /// user_pattern = "%USER%"
     ///
     /// [redis]
     /// uri = "redis://127.0.0.1/"
@@ -243,6 +249,7 @@ impl Config {
         merge_with_arg!(config.redis.uri, String, args);
         merge_with_arg!(config.ldap.uri, String, args);
         merge_with_arg!(config.ldap.base_dn, String, args);
+        merge_with_arg!(config.ldap.user_pattern, String, args);
         merge_with_arg!(config.ldap.user, String, args);
         merge_with_arg!(config.ldap.pass, String, args);
         config
@@ -257,6 +264,7 @@ impl Config {
         merge_with_env!(config.redis.uri, String, env);
         merge_with_env!(config.ldap.uri, String, env);
         merge_with_env!(config.ldap.base_dn, String, env);
+        merge_with_env!(config.ldap.user_pattern, String, env);
         merge_with_env!(config.ldap.user, String, env);
         merge_with_env!(config.ldap.pass, String, env);
         config
