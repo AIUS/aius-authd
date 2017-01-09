@@ -72,11 +72,23 @@ fn validate_handler(req: &mut Request) -> IronResult<Response> {
     Ok(Response::with((status::Ok, itry!(serde_json::to_string_pretty(&resp)))))
 }
 
+
+fn revoke_handler(req: &mut Request) -> IronResult<Response> {
+    let token = req.extensions.get::<Router>().unwrap().find("token").unwrap();
+    let uuid = itry!(uuid::Uuid::parse_str(token));
+    let redis = itry!(req.extensions.get::<CurrentConfig>().unwrap().redis.connect());
+    let _: () = itry!(redis.del(format!("token:{}", uuid.simple())));
+
+    Ok(Response::with((status::Ok, "OK")))
+}
+
+
 pub fn get_handler() -> Router {
     let mut router = Router::new();
     router.get("/config", config_handler, "config");
     router.get("/ping", ping_handler, "ping");
     router.post("/login", login_handler, "login");
     router.get("/validate/:token", validate_handler, "validate");
+    router.get("/revoke/:token", revoke_handler, "revoke");
     router
 }
