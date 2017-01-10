@@ -5,6 +5,7 @@ dependencies = [
  "bodyparser 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "clap 2.20.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "iron 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "log 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "logger 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "openldap 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "redis 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",

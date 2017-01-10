@@ -8,6 +8,7 @@ authors = ["Quentin Gliech <quentingliech@gmail.com>"]
 bodyparser = "0.4.*"
 clap = "~2.20.0"
 iron = "0.4.*"
+log = "0.3.*"
 logger = "0.2.*"
 openldap = "1.1.*"
 redis = "0.8.*"

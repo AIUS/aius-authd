@@ -1,6 +1,7 @@
 extern crate bodyparser;
 #[macro_use] extern crate clap;
 #[macro_use] extern crate iron;
+#[macro_use] extern crate log;
 extern crate logger;
 extern crate openldap;
 extern crate redis;
@@ -96,9 +97,10 @@ fn main() {
     .merge_with_args(args)
     .merge_with_env(env);
 
-    // @TODO: Pretty startup info
-    println!("{:?}", config);
+    info!("Redis server: {}", config.redis.uri);
+    info!("LDAP server: {}", config.ldap.uri);
 
     // @TODO: Error handling when starting server
-    let _ = server::start(config.clone(), server::get_handler()).unwrap();
+    let server = server::start(config.clone(), server::get_handler()).unwrap();
+    info!("Listening on {}", server.socket);
 }

@@ -1,6 +1,5 @@
 use bodyparser;
 use serde_json;
-use redis;
 use redis::Commands;
 use iron::prelude::*;
 use iron::status;
@@ -8,19 +7,6 @@ use router::Router;
 use server::middlewares::CurrentConfig;
 use ldap;
 use uuid;
-
-fn config_handler(req: &mut Request) -> IronResult<Response> {
-    // Print the config as a test
-    let config = req.extensions.get::<CurrentConfig>().unwrap();
-    Ok(Response::with((status::Ok, itry!(serde_json::to_string_pretty(config)))))
-}
-
-fn ping_handler(req: &mut Request) -> IronResult<Response> {
-    // Pings the Redis server
-    let con = itry!(req.extensions.get::<CurrentConfig>().unwrap().redis.connect());
-    let ret: String = redis::cmd("PING").query(&con).unwrap();
-    Ok(Response::with((status::Ok, ret)))
-}
 
 #[derive(Deserialize, Clone, Debug)]
 struct LoginRequest {
@@ -85,10 +71,8 @@ fn revoke_handler(req: &mut Request) -> IronResult<Response> {
 
 pub fn get_handler() -> Router {
     let mut router = Router::new();
-    router.get("/config", config_handler, "config");
-    router.get("/ping", ping_handler, "ping");
-    router.post("/login", login_handler, "login");
-    router.get("/validate/:token", validate_handler, "validate");
-    router.get("/revoke/:token", revoke_handler, "revoke");
+    router.post("/token", login_handler, "login");
+    router.get("/token/:token", validate_handler, "validate");
+    router.delete("/token/:token", revoke_handler, "revoke");
     router
 }
