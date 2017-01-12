@@ -1,5 +1,5 @@
 [package]
-name = "auth-service"
+name = "aius-authd"
 description = "Authentication micro-service plugged on LDAP"
 version = "0.1.0"
 authors = ["Quentin Gliech <quentingliech@gmail.com>"]

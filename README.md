@@ -1,4 +1,4 @@
-# `auth-service` – Authentication service plugged on LDAP server
+# `aius-authd` – Authentication service plugged on LDAP server
 
 ## Routes
 
@@ -44,7 +44,7 @@
 
 ```
 USAGE:
-    auth-service [OPTIONS]
+    aius-authd [OPTIONS]
 
 FLAGS:
     -h, --help       Prints help information
